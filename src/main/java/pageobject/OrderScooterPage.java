@@ -56,9 +56,17 @@ public class OrderScooterPage {
     //Logo-button
     private final By buttonLogoSamokat = By.cssSelector(".Header_LogoScooter__3lsAR");
 
+    private final By cookButtonLocator = By.xpath("//button[contains(@class, 'App_CookieButton')]");
+
     //Конструктор
     public OrderScooterPage(WebDriver driver) {
         this.driver = driver;
+    }
+
+    // Убираем всплывающее окно
+    public void cookieButtonClick() {
+        WebElement cookieButton = driver.findElement(cookButtonLocator);
+        cookieButton.click();
     }
 
     public void enterName(String name) {
@@ -134,7 +142,6 @@ public class OrderScooterPage {
         ((JavascriptExecutor)driver).executeScript("arguments[0].scrollIntoView(true);", nextButtonElement);
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
-
         wait.until(ExpectedConditions.elementToBeClickable(nextButtonElement)).click();
     }
 
@@ -231,8 +238,6 @@ public class OrderScooterPage {
     }
 
     // Выбираем, с какой кнопки запустить форму заказа
-    // В ревью была информация, что запускаем только с верхней, но в задаче в постановке написано
-    // учесть обе точки входа, поэтому данный метод всё же оставлю
     public OrderScooterPage chooseTheOrderButtonToClick(String button) throws InterruptedException {
         // объект класса главной страницы для нажатия на кнопку
         MainScooterGeneralPage objScooterPage = new MainScooterGeneralPage(driver);
@@ -247,49 +252,32 @@ public class OrderScooterPage {
             default: objScooterPage.clickHeaderOrderButton();
         }
         return this;
-        /*if (button.equalsIgnoreCase(UPPER_BUTTON)) {
-            objScooterPage.clickHeaderOrderButton();
-        } else if (button.equalsIgnoreCase(LOWER_BUTTON)) {
-            objScooterPage.clickFooterOrderButton();
-        }*/
-        }
+
+    }
 
     public OrderScooterPage fillInUserPersonalData(String name,String surname,String address,String subway,String phone) throws InterruptedException {
-        Thread.sleep(3000);
+
         enterName(name);
-        Thread.sleep(3000);
         enterSurname(surname);
-        Thread.sleep(3000);
         selectSubway(subway);
-        Thread.sleep(3000);
         enterAddress(address);
-        Thread.sleep(3000);
         enterPhone(phone);
-        Thread.sleep(3000);
         clickNextButton();
-        Thread.sleep(3000);
         return this;
     }
 
     public OrderScooterPage fillInOrderDetails(String date,String term,String color,String comment) throws InterruptedException {
-        Thread.sleep(3000);
         selectDate(date);
-        Thread.sleep(3000);
         selectTerm(term);
-        Thread.sleep(3000);
         selectColor(color);
-        Thread.sleep(3000);
         enterComment(comment);
-        Thread.sleep(3000);
         clickOrderButton();
-        Thread.sleep(3000);
         return this;
     }
 
     public void checkOrderConfirmationModal() throws InterruptedException {
         // Проверка результатов заполнения
         String confirmationTitle = getDoYouReallyWantTitle();
-        Thread.sleep(3000);
         Assert.assertEquals("Заголовок модального окна подтверждения неверный: ",TITLE_DO_YOU_REALLY_WANT_TO_ORDER, confirmationTitle);
         clickYesButton();
     }
@@ -299,5 +287,4 @@ public class OrderScooterPage {
         Assert.assertEquals("Не получилось оформить заказ!", TITLE_ORDER_PROCESSED, orderReceivedTitle);
         clickStatusButton();
     }
-
 }

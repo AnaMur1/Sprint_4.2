@@ -2,9 +2,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import pageobject.MainScooterGeneralPage;
+
+import static constants.URL.HOME_PAGE;
 
 
 public class MainTests {
@@ -14,10 +16,16 @@ public class MainTests {
     public void beforeTest() {
         // драйвер для браузера
         ChromeOptions options = new ChromeOptions();
-        driver = new FirefoxDriver();
-        //driver = new ChromeDriver(options);
+        options.addArguments("--start-maximized");
+        driver = new ChromeDriver(options);
+        //driver = new FirefoxDriver();
         // переход на страницу тестового приложения
-        driver.get("https://qa-scooter.praktikum-services.ru/");
+        driver.get(HOME_PAGE);
+        // объект класса главной страницы
+        MainScooterGeneralPage objScooterPage = new MainScooterGeneralPage(driver);
+        //Закрываем всплывающее окно
+        objScooterPage.cookieButtonClick();
+
     }
 
     //Проверяет название раздела с вопросами

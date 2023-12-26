@@ -52,8 +52,16 @@ public class MainScooterQuestionsPage {
     public static final String TEXT_QUESTION8 = "Я живу за МКАДом, привезёте?";
     public static final String TEXT_ANSWER8 = "Да, обязательно. Всем самокатов! И Москве, и Московской области.";
 
+    private final By cookButtonLocator = By.xpath("//button[contains(@class, 'App_CookieButton')]");
+
     public MainScooterQuestionsPage(WebDriver driver){
         this.driver = driver;
+    }
+
+    // Убираем всплывающее окно
+    public void cookieButtonClick() {
+        WebElement cookieButton = driver.findElement(cookButtonLocator);
+        cookieButton.click();
     }
 
     // Найти элемент вопроса

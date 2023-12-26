@@ -1,15 +1,20 @@
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import pageobject.OrderScooterPage;
 
-import static constants.URL.ORDER_PAGE;
+import static constants.URL.HOME_PAGE;
 import static pageobject.MainScooterGeneralPage.UPPER_BUTTON;
 
 @RunWith(Parameterized.class)
 public class OrderScooterParametrizedTest {
+    private WebDriver driver;
     private final String name;
     private final String surname;
     private final String address;
@@ -48,10 +53,6 @@ public class OrderScooterParametrizedTest {
     //Проверка оформления заказа
     @Test
     public void checkMakingOrder() throws InterruptedException {
-        WebDriver driver = new ChromeDriver();
-        //WebDriver driver = new FirefoxDriver();
-        driver.get(ORDER_PAGE);
-
         // объект класса страницы с параметрами заказа
         OrderScooterPage objOrderForm = new OrderScooterPage(driver);
 
@@ -64,6 +65,28 @@ public class OrderScooterParametrizedTest {
 
         objOrderForm.checkOrderStatusModal();
         objOrderForm.goToMain();
+
+    }
+
+    @Before
+    public void beforeTest() {
+        // драйвер для браузера
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--start-maximized");
+        //driver = new ChromeDriver(options);
+        driver = new FirefoxDriver();
+        // переход на страницу тестового приложения
+        driver.get(HOME_PAGE);
+        // объект класса страницы с параметрами заказа
+        OrderScooterPage objOrderForm = new OrderScooterPage(driver);
+        // Убираем всплывающее окно
+        objOrderForm.cookieButtonClick();
+    }
+
+    @After
+    public void teardown() {
+        // Закрыть браузер
         driver.quit();
     }
 }
+

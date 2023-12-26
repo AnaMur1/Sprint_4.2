@@ -1,9 +1,12 @@
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import pageobject.MainScooterQuestionsPage;
@@ -13,6 +16,8 @@ import static pageobject.MainScooterQuestionsPage.*;
 
 @RunWith(Parameterized.class)
 public class ImportantQuestionsParametrizedTest {
+    private WebDriver driver;
+
     // Элемент выпадающего списка - вопрос и ответ
     private final By importantQuestionLocator;
     private final By importantAnswerLocator;
@@ -21,7 +26,7 @@ public class ImportantQuestionsParametrizedTest {
 
     //Конструктор
     public ImportantQuestionsParametrizedTest(By importantQuestionLocator, By importantAnswerLocator,
-                                    String questionText, String questionAnswer) {
+                                              String questionText, String questionAnswer) {
         this.importantQuestionLocator = importantQuestionLocator;
         this.importantAnswerLocator = importantAnswerLocator;
         this.questionExpectedText = questionText;
@@ -45,11 +50,6 @@ public class ImportantQuestionsParametrizedTest {
     // Проверить соответствие текстов вопроса и ответа
     @Test
     public void shouldCheckQuestionAndAnswer() {
-        ChromeOptions options = new ChromeOptions();
-        //WebDriver driver = new ChromeDriver(options);;
-        WebDriver driver = new FirefoxDriver();
-        driver.get(HOME_PAGE);
-
         MainScooterQuestionsPage questionsPage = new MainScooterQuestionsPage(driver);
 
         String questionActualText = questionsPage.getQuestionActualText(importantQuestionLocator);
@@ -59,6 +59,27 @@ public class ImportantQuestionsParametrizedTest {
         // Проверить соответствие текста вопроса и ответа ожидаемым значениям
         Assert.assertEquals("Текст вопроса не соответствует ожидаемому: ", questionExpectedText, questionActualText);
         Assert.assertEquals("Текст ответа не соответствует ожидаемому: ", questionExpectedAnswer, answerActualText);
+    }
+
+    @Before
+    public void beforeTest() {
+        // драйвер для браузера
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--start-maximized");
+        //driver = new ChromeDriver(options);
+        driver = new FirefoxDriver();
+
+        // переход на страницу тестового приложения
+        driver.get(HOME_PAGE);
+
+        MainScooterQuestionsPage questionsPage = new MainScooterQuestionsPage(driver);
+        // Убираем всплывающее окно
+        questionsPage.cookieButtonClick();
+    }
+
+    @After
+    public void teardown() {
+        // Закрыть браузер
         driver.quit();
     }
 }

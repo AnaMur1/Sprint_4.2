@@ -10,14 +10,13 @@ import java.time.Duration;
 
 import static constants.URL.ORDER_PAGE;
 
-
 public class MainScooterGeneralPage {
     private WebDriver driver;
 
     // Кнопка "Заказать" вверху страницы
     private final By headerOrderButton = By.cssSelector(".Button_Button__ra12g");
     // Кнопка "Заказать" внизу страницы
-    private final By footerOrderButton = By.cssSelector(".Button_Middle__1CSJM");
+    private final By footerOrderButton = By.xpath("//div[contains(@class, 'Home_FinishButton')]/button");
     //Подзаголовок вопросов
     private final By questionsTitle = By.cssSelector(".Home_FourPart__1uthg > div:nth-child(1)");
     //Ожидаемый текст названия раздела вопросов
@@ -25,10 +24,17 @@ public class MainScooterGeneralPage {
     public static final String UPPER_BUTTON = "upper";
     public static final String LOWER_BUTTON = "lower";
 
+    private final By cookButtonLocator = By.xpath("//button[contains(@class, 'App_CookieButton')]");
 
     //Конструктор
     public MainScooterGeneralPage(WebDriver driver) {
         this.driver = driver;
+    }
+
+    // Убираем всплывающее окно
+    public void cookieButtonClick() {
+        WebElement cookieButton = driver.findElement(cookButtonLocator);
+        cookieButton.click();
     }
 
     //Проверить корректность текста подзаголовка
@@ -63,5 +69,4 @@ public class MainScooterGeneralPage {
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
         lowerButton.click();
     }
-
 }
